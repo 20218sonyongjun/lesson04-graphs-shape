@@ -72,7 +72,6 @@ st.divider()
 # =========================================
 st.subheader("3. 총 관객수 분포")
 
-# 히스토그램 생성
 fig3 = px.histogram(
     df, 
     x='total_audi',
@@ -92,14 +91,55 @@ fig3.update_layout(
 
 st.plotly_chart(fig3, use_container_width=True)
 
-# 최고 관객수 영화 정보 데이터프레임에서 동적 추출
 top_movie = df.loc[df['total_audi'].idxmax()]
 top_movie_name = top_movie['movieNm']
 top_movie_audi = top_movie['total_audi']
 
-# 그래프 아래 해석 문구 출력
 st.markdown(
     f"**이 그래프로 알 수 있는 것:** 대다수의 영화가 **100만~200만 명 이하의 낮은 관객수 구간**에 모여 있으며, "
     f"가장 많은 관객을 동원한 영화는 **'{top_movie_name}'**({top_movie_audi:,}명)입니다."
 )
 st.divider()
+
+# =========================================
+# 4. 개봉일 스크린수와 총 관객수의 관계 (산점도)
+# =========================================
+st.subheader("4. 개봉일 스크린수와 총 관객수의 관계")
+
+fig4 = px.scatter(
+    df,
+    x='first_scrn',
+    y='total_audi',
+    color='genre',
+    hover_name='movieNm',
+    labels={
+        'first_scrn': '개봉일 스크린수',
+        'total_audi': '총 관객수',
+        'genre': '장르'
+    }
+)
+
+fig4.update_traces(
+    hovertemplate='<b>%{hovertext}</b><br>개봉일 스크린수: %{x:,}개<br>총 관객수: %{y:,}명<extra></extra>'
+)
+
+fig4.update_layout(
+    xaxis_title="개봉일 스크린수 (개)",
+    yaxis_title="총 관객수 (명)"
+)
+
+st.plotly_chart(fig4, use_container_width=True)
+
+st.markdown(
+    "**이 그래프로 알 수 있는 것:** 대체로 **개봉일 스크린수가 많을수록 총 관객수도 증가하는 양의 상관관계**를 보이지만, "
+    "스크린수가 적어도 높은 관객수를 기록하거나 스크린수가 많아도 관객수가 적은 흥행 예외 사례도 관찰됩니다."
+)
+st.divider()
+```eof
+
+네 번째 그래프인 **개봉일 스크린수와 총 관객수의 산점도**가 정상적으로 추가되었습니다. 
+
+* 점에 마우스를 올리면 **영화명**과 함께 스크린수, 총 관객수가 천 단위 쉼표 포맷으로 나타납니다.
+* **장르별로 색상**이 다르게 구분되며 범례(Legend)를 통해 특정 장르만 필터링하여 확인하실 수도 있습니다.
+
+추가로 수정하고 싶은 부분이나 새로운 그래프 요청이 있으시면 말씀해 주세요!
