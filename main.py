@@ -16,7 +16,7 @@ st.caption("KOBIS 박스오피스 상위 영화 216편 데이터 분석")
 # 데이터 불러오기 및 전처리
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/happykth/data/main/kobis_movies.csv"
+    url = "https://raw.githubusercontent.com/greatsong/modudata/main/data/kobis_movies.csv"
     df = pd.read_csv(url)
 
     # 장르 열: 세로막대 기호(|) 기준으로 첫 번째 장르만 추출
@@ -65,11 +65,42 @@ st.info(
 st.divider()
 
 # ==========================================
-# 구역 2: 개봉일 스크린수와 총 관객수의 관계
+# 구역 2: 장르 및 영화별 총 관객수 (트리맵 그래프)
 # ==========================================
-st.subheader("2. 개봉일 스크린수와 총 관객수의 관계")
+st.subheader("2. 장르 및 영화별 총 관객수 분포")
 
-fig2 = px.scatter(
+# 트리맵 그래프 작성 (장르 > 영화 구조, 칸 크기: total_audi)
+fig2 = px.treemap(
+    df,
+    path=[px.Constant("전체 영화"), "genre", "movieNm"],
+    values="total_audi",
+    color="genre",
+    title="장르 및 영화별 총 관객수 트리맵 (칸 크기: 총 관객수)",
+    color_discrete_sequence=px.colors.qualitative.Pastel,
+)
+
+# 마우스 오버 시 영화명(label)과 총 관객수(value) 표시
+fig2.update_traces(
+    hovertemplate="<b>%{label}</b><br>총 관객수: %{value:,.0f}명<extra></extra>"
+)
+
+fig2.update_layout(margin=dict(t=50, b=20, l=20, r=20))
+
+st.plotly_chart(fig2, use_container_width=True)
+
+# 인사이트 구역
+st.info(
+    "💡 **이 그래프로 알 수 있는 것:** 각 장르 내부에서 어떤 영화가 시장 관객수의 대부분을 차지하고 있는지 한눈에 비중을 비교할 수 있습니다."
+)
+
+st.divider()
+
+# ==========================================
+# 구역 3: 개봉일 스크린수와 총 관객수의 관계
+# ==========================================
+st.subheader("3. 개봉일 스크린수와 총 관객수의 관계")
+
+fig3 = px.scatter(
     df,
     x="first_scrn",
     y="total_audi",
@@ -90,9 +121,9 @@ fig2 = px.scatter(
     },
 )
 
-fig2.update_layout(margin=dict(t=50, b=20, l=20, r=20))
+fig3.update_layout(margin=dict(t=50, b=20, l=20, r=20))
 
-st.plotly_chart(fig2, use_container_width=True)
+st.plotly_chart(fig3, use_container_width=True)
 
 # 인사이트 구역
 st.info(
@@ -102,11 +133,11 @@ st.info(
 st.divider()
 
 # ==========================================
-# 구역 3: 총 관객수 분포
+# 구역 4: 총 관객수 분포
 # ==========================================
-st.subheader("3. 총 관객수 구간별 분포")
+st.subheader("4. 총 관객수 구간별 분포")
 
-fig3 = px.histogram(
+fig4 = px.histogram(
     df,
     x="total_audi",
     nbins=30,
@@ -115,11 +146,11 @@ fig3 = px.histogram(
     color_discrete_sequence=["#636EFA"],
 )
 
-fig3.update_layout(
+fig4.update_layout(
     yaxis_title="영화 수 (편)", margin=dict(t=50, b=20, l=20, r=20)
 )
 
-st.plotly_chart(fig3, use_container_width=True)
+st.plotly_chart(fig4, use_container_width=True)
 
 # 인사이트 구역
 st.info(
