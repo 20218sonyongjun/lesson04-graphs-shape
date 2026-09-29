@@ -198,6 +198,44 @@ st.info(
 
 st.divider()
 
+# ==========================================
+# 구역 6: 개봉일 스크린수, 첫 주 관객수, 총 관객수 (버블 차트)
+# ==========================================
+st.subheader("6. 개봉일 스크린수, 첫 주 관객수, 총 관객수의 관계")
+
+fig6 = px.scatter(
+    df,
+    x="first_scrn",
+    y="total_audi",
+    size="first_week_audi",
+    color="genre",
+    hover_name="movieNm",
+    title="개봉일 스크린수 대비 총 관객수 버블 차트 (버블 크기: 개봉 첫 주 관객수)",
+    labels={
+        "first_scrn": "개봉일 스크린수 (개)",
+        "total_audi": "총 관객수 (명)",
+        "first_week_audi": "첫 주 관객수 (명)",
+        "genre": "장르",
+    },
+    hover_data={
+        "first_scrn": ":,",
+        "total_audi": ":,",
+        "first_week_audi": ":,",
+        "genre": True,
+    },
+    color_discrete_sequence=px.colors.qualitative.Pastel,
+)
+
+fig6.update_layout(margin=dict(t=50, b=20, l=20, r=20))
+
+st.plotly_chart(fig6, use_container_width=True)
+
+st.info(
+    "💡 **이 그래프로 알 수 있는 것:** 개봉일 스크린수가 많고 개봉 첫 주 관객수(버블 크기)가 클수록 최종 총 관객수도 높아지는 경향을 보이며, 버블의 크기를 통해 초반 흥행 기세가 최종 흥행 성적에 미친 영향력을 입체적으로 확인할 수 있습니다."
+)
+
+st.divider()
+
 # 데이터 원본 확인용 확장 영역
 with st.expander("🔍 원본 데이터셋 보기"):
     st.dataframe(df, use_container_width=True)
