@@ -262,6 +262,51 @@ st.info(
 
 st.divider()
 
+# ==========================================
+# 구역 8: 질문 해결 구역 (추세선 포함 산점도)
+# ==========================================
+st.subheader("8. 개봉일 스크린수가 많으면 총 관객도 많을까?")
+
+# 그래프 선택 이유 설명 (한 줄)
+st.markdown(
+    "📌 **그래프 선택 이유:** 두 연속형 수치 변수(스크린수와 관객수) 간의 상관관계와 전체적인 비례 경향성을 추세선과 함께 직관적으로 확인하기에 **회귀 추세선 산점도**가 가장 적합합니다."
+)
+
+# 스크린수와 총 관객수의 상관계수 계산
+corr_val = df["first_scrn"].corr(df["total_audi"])
+
+# 추세선(OLS)을 포함한 산점도 생성
+fig8 = px.scatter(
+    df,
+    x="first_scrn",
+    y="total_audi",
+    color="genre",
+    hover_name="movieNm",
+    trendline="ols",
+    title="개봉일 스크린수가 많으면 총 관객도 많을까?",
+    labels={
+        "first_scrn": "개봉일 스크린수 (개)",
+        "total_audi": "총 관객수 (명)",
+        "genre": "장르",
+    },
+    hover_data={
+        "first_scrn": ":,",
+        "total_audi": ":,",
+        "genre": True,
+    },
+    color_discrete_sequence=px.colors.qualitative.Pastel,
+)
+
+fig8.update_layout(margin=dict(t=50, b=20, l=20, r=20))
+
+st.plotly_chart(fig8, use_container_width=True)
+
+st.info(
+    f"💡 **이 그래프로 알 수 있는 것:** 개봉일 스크린수와 총 관객수는 상관계수 약 **{corr_val:.2f}**로 우상향하는 뚜렷한 **양의 상관관계**를 보입니다. 즉, 개봉일 스크린수가 많을수록 대체로 총 관객수도 많아진다는 경향성을 확인할 수 있습니다."
+)
+
+st.divider()
+
 # 데이터 원본 확인용 확장 영역
 with st.expander("🔍 원본 데이터셋 보기"):
     st.dataframe(df, use_container_width=True)
