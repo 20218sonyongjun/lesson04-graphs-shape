@@ -16,7 +16,7 @@ st.caption("KOBIS 박스오피스 상위 영화 216편 데이터 분석")
 # 데이터 불러오기 및 전처리
 @st.cache_data
 def load_data():
-    url = "https://raw.githubusercontent.com/greatsong/modudata/main/data/kobis_movies.csv"
+    url = "https://raw.githubusercontent.com/happykth/data/main/kobis_movies.csv"
     df = pd.read_csv(url)
 
     # 장르 열: 세로막대 기호(|) 기준으로 첫 번째 장르만 추출
